@@ -146,3 +146,81 @@ SELECT TOP(20) PERCENT * FROM khach_hang
 -- WHERE tên cột LIKE '%Nôi dung%'
 -- Nếu là tiếng việt thêm N và trước '%Nội dung%' 
 SELECT * FROM khach_hang WHERE ho_dem LIKE N'%nguyễn%'
+--21.	Hiển thị danh sách phòng có giá từ 15000 đến 20000
+-- Truy vấn trong khoảng
+-- SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE tên cột BETWEEN giá trị min AND giá trị max
+SELECT * FROM phong WHERE gia BETWEEN 15000 AND 20000
+--23.	Hiện thi giá phòng cao nhất
+-- MAX, MIN, COUNT,  AVG 
+-- SELECT MAX(Tên côt) FROM tên bảng (có thể có WHERE hoặc không tùy và điều kiện)
+SELECT MAX(gia) AS 'Giá phòng cao nhất' FROM phong
+--29.	Săp xếp hóa đơn theo mức giá giảm dần
+-- Sắp xếp tăng dần: ASC
+-- Sắp xếp giảm dần: DESC
+-- SELECT  cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE (có thể, có thể không)
+-- ORDER BY tên côt muốn sắp xếp ASC|DESC
+SELECT * FROM hoa_don ORDER BY tong_tien DESC
+--33.	Đếm số lượng bản ghi có trong bảng Khách hàng
+-- không đếm null 
+-- SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE (có thể, có thể không)
+SELECT COUNT(*) FROM khach_hang
+--35.	Đếm số lượng phòng có giá từ 15000 đến 20000
+SELECT COUNT(*) AS'Tổng số phòng có giá 15k đến 20k'
+FROM phong WHERE gia BETWEEN 15000 AND 20000
+-- 37.	Hiển thị danh sách khách hàng không phải họ nguyễn 
+-- NOT : Phủ định
+SELECT * FROM khach_hang WHERE ho_dem NOT LIKE N'%nguyễn%'
+--39.	Hiển thị danh sách khách hàng phải họ nguyễn hoặc trần hoặc lê
+SELECT * FROM khach_hang 
+WHERE ho_dem LIKE N'%nguyễn%' OR ho_dem LIKE N'%Trần%' 
+OR ho_dem LIKE N'%Lê%'
+-- IN: ý nghĩa như OR
+-- NOT IN: Ngược lại của in
+SELECT * FROM khach_hang WHERE ho_dem IN (N'Nguyễn', N'Trần', N'Lê')
+--40.	Hiển thị danh sách khách hàng không mang số điện thoại số 098, 766, 791
+SELECT * FROM khach_hang WHERE so_dien_thoai NOT LIKE '%098%' 
+AND  so_dien_thoai NOT LIKE '%766%' AND so_dien_thoai NOT LIKE '%791%' 
+--42.	Hiển thị tất cả các giá trị null trong bảng khách hàng
+-- IS NULL: Tìm giá trị NULL
+-- IS NOT NULL : Tìm giá trị khác NULL
+-- SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE Tên cột 1 IS NULL OR tên cột 2 IS NULL OR ... OR tên cột n IS NULL
+-- THÊM NOT VÀO VÀ ĐỔI OR THÀNH AND
+SELECT * FROM khach_hang 
+WHERE id_khach_hang IS NOT NULL AND ho_dem IS NOT NULL
+SELECT * FROM khach_hang 
+WHERE id_khach_hang IS NULL OR ho_dem IS NULL
+--44.	Tính trung bình giá thuê của các phòng theo từng loại phòng
+SELECT * FROM phong
+-- Nhóm dữ liệu : GROUP BY
+-- SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE (có thể, có thể không)
+-- GROUP BY  Tên cột 1, tên cột 2, ..., tên cột n
+-- Nhóm theo cái gì thì SELECT CÁI ĐÓ
+-- GROUP BY Thường dùng chúng với hàm MAX, MIN, COUNT, AVG, ORDER BY
+SELECT loai_phong, AVG(gia) AS 'Gía trung bình'
+FROM phong
+GROUP BY loai_phong
+--46.	Hiển thị danh sách hóa đơn trong tháng 6.
+-- Lấy chia dữ liệu dưới dạng ngày tháng năm
+-- DAY(tên cột hoặc dữ liệu)
+-- MONTH(tên cột hoặc dữ liệu)
+-- YEAR(tên cột hoặc dữ liệu)
+-- Dữ liệu 'mm-dd-yyyy'
+-- SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng 
+-- WHERE DAY|MONTH|YEAR(tên cột hoặc dữ liệu) 
+SELECT * FROM hoa_don WHERE MONTH(ngay_thanh_toan) = 5;
+-- 49.	Hiển thị thông tin các khách hàng và tổng số tiền hóa đơn của mỗi khách hàng. 
+--Chỉ hiển thị những khách hàng có tổng số tiền hóa đơn lớn hơn 500.
+-- HAVING: Lọc của nhóm
+--SELECT Tên cột 1, tên cột 2, ..., tên cột n FROM tên bảng
+-- WHERE (có thể, có thể không)
+-- GROUP BY  Tên cột 1, tên cột 2, ..., tên cột n
+-- HAVING điều kiện 
+SELECT id_dat_phong, SUM(tong_tien)
+FROM hoa_don
+GROUP BY id_dat_phong
+HAVING SUM(tong_tien)> 500
